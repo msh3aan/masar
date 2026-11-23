@@ -1,277 +1,541 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مسار | تطبيق العادات اليومية والعبادات</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0c0d10;
-      --surface: #14161b;
-      --border: #23262f;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --accent: #10b981;
-      --accent-hover: #059669;
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>مسار — رتّب يومك بين العبادة والعافية</title>
+<meta name="description" content="مسار: تطبيق أندرويد يومي للعبادات والعادات الصحية — صلوات، أذكار، خطوات، ماء، مفكرة، وستريك يومي." />
+<meta name="theme-color" content="#120c07" />
+<link rel="icon" type="image/jpeg" href="./img/icon.jpg" />
+<link rel="apple-touch-icon" href="./img/icon.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Tajawal', 'sans-serif'], display: ['Amiri', 'serif'] },
+        colors: {
+          ink: '#120c07',
+          panel: '#1b130c',
+          line: '#2f2216',
+          emerald: { 200: '#f3e3c3', 300: '#e8cf9f', 400: '#d9b072', 500: '#c08f4f', 600: '#9a6a35' },
+          gold: '#d9ad62',
+          sky2: '#7dd3fc',
+          muted: '#a99683'
+        }
+      }
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-    }
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    header {
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .brand {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .badge {
-      font-size: 12px;
-      background: rgba(16, 185, 129, 0.12);
-      color: var(--accent);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-    .hero {
-      padding: 72px 0 56px;
-      text-align: center;
-    }
-    .hero h1 {
-      font-size: clamp(32px, 6vw, 48px);
-      font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 16px;
-    }
-    .hero p {
-      color: var(--muted);
-      font-size: 18px;
-      max-width: 600px;
-      margin: 0 auto 32px;
-    }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: 0.2s ease;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: #06281e;
-    }
-    .btn-primary:hover { background: var(--accent-hover); color: #fff; }
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover { border-color: #3f4452; }
-    .meta-info {
-      margin-top: 16px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    section {
-      padding: 48px 0;
-      border-top: 1px solid var(--border);
-    }
-    .section-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    .section-sub {
-      color: var(--muted);
-      margin-bottom: 28px;
-      font-size: 15px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px;
-    }
-    .card-icon {
-      font-size: 26px;
-      margin-bottom: 12px;
-      display: inline-block;
-    }
-    .card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-    .card p {
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .changelog-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-    }
-    .changelog-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .changelog-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .changelog-list li {
-      color: #d1d5db;
-      font-size: 15px;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .changelog-list li::before {
-      content: "•";
-      color: var(--accent);
-      font-weight: bold;
-    }
-    footer {
-      padding: 32px 0;
-      border-top: 1px solid var(--border);
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-    }
-  </style>
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Tajawal', sans-serif; background: #120c07; }
+  .card { background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.012)); border: 1px solid #2f2216; }
+  .glass { background: rgba(26,17,10,.62); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.08); }
+  .phone { box-shadow: 0 50px 140px -30px rgba(192,143,79,.35), 0 0 0 1px rgba(217,173,98,.18), inset 0 0 0 1px rgba(255,255,255,.06); }
+  .gold-line { background: linear-gradient(90deg, transparent, rgba(217,173,98,.6), transparent); height: 1px; }
+  .img-zoom img { transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+  .img-zoom:hover img { transform: scale(1.05); }
+  .ring-track { stroke: #2f2216; }
+  .ring-bar { transition: stroke-dashoffset .6s cubic-bezier(.2,.8,.2,1); }
+  .pop { animation: pop .35s ease; }
+  @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.18)} 100%{transform:scale(1)} }
+  .float { animation: float 7s ease-in-out infinite; }
+  .float-2 { animation: float 8s ease-in-out infinite reverse; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes toast { 0%{opacity:0;transform:translateY(4px)} 20%{opacity:1} 100%{opacity:0;transform:translateY(-18px)} }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq-plus { font-size: 1.5rem; line-height: 1; transition: transform .3s ease; }
+  .faq[open] .faq-plus { transform: rotate(45deg); }
+  .faq[open] { border-color: rgba(217,173,98,.3); }
+  @media (prefers-reduced-motion: reduce) { .float,.float-2,.pop{animation:none} .ring-bar,.img-zoom img{transition:none} .reveal{opacity:1;transform:none} }
+</style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <div class="brand">مسار</div>
-      <span class="badge" id="versionBadge">الإصدار v1.0.0</span>
-    </header>
+<body class="text-white antialiased">
 
-    <main>
-      <div class="hero">
-        <h1>رتّب يومك، التزم بعباداتك، وابنِ عاداتك الصحية</h1>
-        <p>تطبيق عملي وبسيط يجمع الصلوات والأذكار، المشي وشرب الماء، ومهامك اليومية في مكان واحد بنظام نقاط وستريك يحفزك على الاستمرار بدون تعقيد.</p>
-        <div class="actions">
-          <a id="downloadBtn" href="https://github.com/msh3aan/masar/releases/latest/download/masar.apk" class="btn btn-primary">
-            تحميل للأندرويد (APK)
-          </a>
-          <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" class="btn btn-secondary">
-            فتح نسخة الويب / الآيفون
-          </a>
+  <!-- Header -->
+  <header class="fixed inset-x-0 top-0 z-40">
+    <div class="mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-2xl px-4 py-3 glass md:px-5">
+      <a href="#" class="flex items-center gap-3" aria-label="مسار — الرئيسية">
+        <img src="./img/icon.jpg" alt="" width="40" height="40" class="h-10 w-10 rounded-xl object-cover shadow-lg shadow-black/40 ring-1 ring-gold/30" />
+        <span class="font-display text-2xl font-bold leading-none">مسار</span>
+        <span class="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[11px] font-medium text-gold" dir="ltr">v1.0.0</span>
+      </a>
+      <nav class="hidden items-center gap-8 text-sm text-white/70 md:flex" aria-label="التنقل الرئيسي">
+        <a href="#pillars" class="transition hover:text-white">الركائز</a>
+        <a href="#features" class="transition hover:text-white">المميزات</a>
+        <a href="#changelog" class="transition hover:text-white">التحديثات</a>
+        <a href="#faq" class="transition hover:text-white">الأسئلة</a>
+      </nav>
+      <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-bold text-ink transition hover:bg-emerald-200">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+        تحميل
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="relative isolate overflow-hidden">
+      <img src="./img/hero.jpg" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover object-[70%_center] opacity-80" />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink/40 via-ink/30 to-ink"></div>
+      <div class="absolute inset-0 -z-10 bg-gradient-to-l from-ink/90 via-ink/40 to-transparent"></div>
+
+      <div class="mx-auto grid min-h-[100svh] max-w-6xl items-center gap-14 px-5 pb-20 pt-32 md:grid-cols-[1.1fr_1fr] md:pt-28">
+        <div class="reveal">
+          <p class="mb-7 inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5 text-xs text-white/80">
+            <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span></span>
+            متوفر الآن للأندرويد · الإصدار الأول
+          </p>
+          <h1 class="font-display text-5xl font-bold leading-[1.35] md:text-7xl md:leading-[1.3]">
+            يومٌ مرتّب،
+            <span class="block bg-gradient-to-l from-gold via-[#ecd9a8] to-emerald-300 bg-clip-text text-transparent">وقلبٌ مطمئن.</span>
+          </h1>
+          <p class="mt-6 max-w-lg text-lg leading-loose text-white/70">
+            رفيقك اليومي من أذان الفجر إلى آخر الليل. صلاتك وذكرك وصحتك في مكان واحد، بلا تشتت ولا زحمة، لتبني عادات تثبت معك يوماً بعد يوم.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-3">
+            <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" rel="noopener" class="group inline-flex items-center gap-3 rounded-2xl bg-gradient-to-b from-emerald-400 to-emerald-600 px-6 py-4 font-bold text-ink shadow-xl shadow-emerald-600/25 transition hover:brightness-110">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48 19.44 6.3a.38.38 0 0 0-.66-.38l-1.86 3.22a11.4 11.4 0 0 0-9.84 0L5.22 5.92a.38.38 0 1 0-.66.38L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52ZM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z"/></svg>
+              <span class="flex flex-col items-start leading-tight"><span class="text-[10px] font-medium opacity-70">حمّل مباشرة</span><span>تحميل للأندرويد (APK)</span></span>
+            </a>
+            <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" rel="noopener" class="inline-flex items-center gap-3 rounded-2xl glass px-6 py-4 font-medium text-white transition hover:border-gold/40">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></svg>
+              نسخة الويب / الآيفون
+            </a>
+          </div>
+          <dl class="mt-14 grid max-w-md grid-cols-3 gap-6">
+            <div><dd class="font-display text-3xl font-bold text-gold">5</dd><dt class="mt-1 text-xs text-white/60">صلوات يومية</dt></div>
+            <div><dd class="font-display text-3xl font-bold text-gold" dir="ltr">10K</dd><dt class="mt-1 text-xs text-white/60">هدف الخطوات</dt></div>
+            <div><dd class="font-display text-3xl font-bold text-gold">14</dd><dt class="mt-1 text-xs text-white/60">يوم إحصائيات</dt></div>
+          </dl>
         </div>
-        <div class="meta-info" id="releaseMeta">يعمل بدون إنترنت • تحديثات مباشرة من الموقع</div>
+
+        <!-- Phone Mockup -->
+        <div class="reveal relative flex justify-center">
+          <div class="pointer-events-none absolute top-16 h-80 w-80 rounded-full bg-emerald-500/20 blur-3xl"></div>
+
+          <div class="float-2 glass absolute -start-2 top-24 z-20 hidden items-center gap-3 rounded-2xl px-4 py-3 lg:flex" aria-hidden="true">
+            <span class="grid h-9 w-9 place-items-center rounded-xl bg-emerald-500/20 text-emerald-300"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></span>
+            <div><p class="text-[11px] text-white/60">تمّت</p><p class="text-sm font-bold">صلاة الفجر</p></div>
+          </div>
+          <div class="float glass absolute -end-4 bottom-28 z-20 hidden items-center gap-3 rounded-2xl px-4 py-3 lg:flex" aria-hidden="true">
+            <span class="grid h-9 w-9 place-items-center rounded-xl bg-orange-500/15"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fb923c" d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1.2-3.8 2.2-4.8.2 1.6 1 2.8 2.3 3.3C11 7.5 12 2 12 2Z"/></svg></span>
+            <div><p class="text-[11px] text-white/60">أفضل ستريك</p><p class="text-sm font-bold text-orange-200">21 يوم</p></div>
+          </div>
+
+          <div class="float relative">
+            <div class="phone relative w-[300px] rounded-[48px] bg-gradient-to-b from-[#2c1e13] to-[#120c07] p-[10px]">
+              <div class="absolute -end-[3px] top-28 h-14 w-[3px] rounded-e bg-[#3d2c1c]"></div>
+              <div class="absolute -start-[3px] top-24 h-8 w-[3px] rounded-s bg-[#3d2c1c]"></div>
+              <div class="absolute left-1/2 top-[22px] z-10 h-[22px] w-[90px] -translate-x-1/2 rounded-full bg-black"></div>
+              <div class="relative overflow-hidden rounded-[38px] bg-[#170f09] px-4 pb-5 pt-12" role="region" aria-label="معاينة تفاعلية لشاشة التطبيق">
+                <div class="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(220px_120px_at_50%_0%,rgba(192,143,79,.22),transparent)]"></div>
+                <div class="absolute inset-x-6 top-3 flex justify-between text-[10px] font-medium text-white/70" dir="ltr" aria-hidden="true"><span>5:42</span><span>100%</span></div>
+
+                <div class="relative flex items-center justify-between">
+                  <div>
+                    <p class="text-[11px] text-muted">صباح الخير، عبدالله</p>
+                    <p class="font-display text-lg font-bold">يومك اليوم</p>
+                  </div>
+                  <span id="dayBadge" class="inline-flex items-center gap-1 rounded-full bg-gold/10 px-2.5 py-1 text-xs font-bold text-gold ring-1 ring-gold/30" aria-live="polite">إنجاز <span id="dayPct" dir="ltr">0%</span></span>
+                </div>
+
+                <!-- Streak -->
+                <div class="relative mt-4 flex items-center gap-3 rounded-2xl border border-orange-400/20 bg-gradient-to-l from-orange-500/15 to-transparent p-3">
+                  <svg id="flame" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#fde047"/></linearGradient></defs><path fill="url(#fl)" d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1.2-3.8 2.2-4.8.2 1.6 1 2.8 2.3 3.3C11 7.5 12 2 12 2Z"/></svg>
+                  <div class="flex-1">
+                    <p class="text-[11px] text-muted">الستريك اليومي</p>
+                    <p class="text-lg font-extrabold"><span id="streak">12</span> يوم متتالي</p>
+                  </div>
+                  <div class="text-left">
+                    <p class="text-[10px] text-muted">الأفضل</p>
+                    <p class="text-sm font-bold text-orange-200">21</p>
+                  </div>
+                </div>
+                <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-line"><div id="dayBar" class="h-full rounded-full bg-gradient-to-l from-gold to-emerald-400 transition-all duration-500" style="width:0%"></div></div>
+
+                <!-- Steps + Water -->
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                  <button id="stepsBtn" type="button" class="rounded-2xl border border-line bg-white/[.025] p-3 text-center transition hover:border-emerald-500/40" aria-label="أضف 1000 خطوة">
+                    <div class="relative mx-auto h-[88px] w-[88px]">
+                      <svg viewBox="0 0 100 100" class="h-full w-full -rotate-90" aria-hidden="true">
+                        <circle cx="50" cy="50" r="42" fill="none" stroke-width="8" class="ring-track"/>
+                        <circle id="stepsRing" cx="50" cy="50" r="42" fill="none" stroke="#d9b072" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="68.6" class="ring-bar"/>
+                      </svg>
+                      <div class="absolute inset-0 grid place-items-center">
+                        <div><p id="stepsVal" class="text-base font-extrabold leading-none">7,400</p><p class="mt-1 text-[9px] text-muted">/ 10,000</p></div>
+                      </div>
+                    </div>
+                    <p class="mt-2 text-[11px] text-muted">الخطوات <span class="text-emerald-300">+1000</span></p>
+                  </button>
+
+                  <div class="rounded-2xl border border-line bg-white/[.025] p-3">
+                    <p class="text-[11px] text-muted">شرب الماء</p>
+                    <p class="mt-1 text-base font-extrabold"><span id="waterMl">990</span> <span class="text-[10px] font-normal text-muted">/ 1980 مل</span></p>
+                    <div id="cans" class="mt-3 grid grid-cols-3 gap-1.5"></div>
+                    <p class="mt-2 text-[9px] text-muted">اضغط العلبة · 330 مل</p>
+                  </div>
+                </div>
+
+                <!-- Prayers -->
+                <div class="mt-3 rounded-2xl border border-line bg-white/[.025] p-3">
+                  <div class="mb-2 flex items-center justify-between">
+                    <p class="text-[11px] text-muted">الصلوات</p>
+                    <p class="text-[10px] text-emerald-300"><span id="prayCount">3</span>/5</p>
+                  </div>
+                  <div id="prayers" class="flex justify-between gap-1"></div>
+                </div>
+                <div class="mx-auto mt-4 h-1 w-24 rounded-full bg-white/30" aria-hidden="true"></div>
+              </div>
+            </div>
+            <p class="mt-6 text-center text-xs text-white/50">جرّب: اضغط على الخطوات والعلب والصلوات</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verse -->
+    <section class="mx-auto max-w-3xl px-5 py-14 text-center reveal">
+      <img src="./img/icon.jpg" alt="أيقونة تطبيق مسار: مسجد وهلال وطريق بين الكثبان" width="56" height="56" class="mx-auto mb-6 h-14 w-14 rounded-2xl object-cover shadow-xl shadow-gold/20 ring-1 ring-gold/30" />
+      <div class="gold-line mx-auto w-28"></div>
+      <p class="mt-7 font-display text-xl leading-relaxed text-white/90 md:text-3xl md:leading-relaxed">﴿ وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ ﴾</p>
+      <p class="mt-3 text-xs text-gold/80">سورة النجم · ٣٩</p>
+      <p class="mx-auto mt-5 max-w-lg text-sm leading-loose text-muted">كل خطوة في مسارك تُحسب — صلاة في وقتها، ذكر بعد غفلة، كوب ماء، ومشي بعد جلوس طويل.</p>
+    </section>
+
+    <!-- Pillars -->
+    <section id="pillars" class="mx-auto max-w-6xl px-5 pb-24">
+      <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end reveal">
+        <div class="max-w-xl">
+          <p class="text-sm font-medium text-gold">أربع ركائز ليوم متوازن</p>
+          <h2 class="mt-3 font-display text-4xl font-bold leading-snug md:text-5xl">روحك، جسدك، ووقتك.</h2>
+        </div>
+        <p class="max-w-sm leading-loose text-muted">مسار يربط العبادة بالعافية وترتيب الحياة في روتين واحد، بدل ما تتنقل بين عشرة تطبيقات.</p>
       </div>
 
-      <section>
-        <h2 class="section-title">ليش تطبيق مسار؟</h2>
-        <p class="section-sub">صُمم ليكون رفيقك اليومي بعيداً عن التشتت، مع تركيز على البداية الصحيحة لليوم.</p>
-        <div class="grid">
-          <div class="card">
-            <span class="card-icon">🌅</span>
-            <h3>بداية يوم بدون تشتت</h3>
-            <p>روتين استيقاظ واضح (بدون جوال، غسل الوجه، الوضوء) مع نظام نقاط XP وستريك يومي يحمسك تحافظ على سلسلتك.</p>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <figure class="img-zoom group relative h-[420px] overflow-hidden rounded-[28px] border border-line reveal">
+          <img src="./img/worship.jpg" alt="مصحف مفتوح على رحل خشبي بجانبه مسبحة خضراء" class="h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></div>
+          <figcaption class="absolute inset-x-0 bottom-0 p-6">
+            <span class="text-xs text-gold">٠١</span>
+            <h3 class="mt-1 font-display text-2xl font-bold">العبادة</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/70">الصلوات الخمس، النوافل، وأذكار تحفظ مكانك.</p>
+          </figcaption>
+        </figure>
+        <figure class="img-zoom group relative h-[420px] overflow-hidden rounded-[28px] border border-line reveal lg:mt-10">
+          <img src="./img/fitness.jpg" alt="عدّاء يجري فجراً بحذاء رياضي" class="h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></div>
+          <figcaption class="absolute inset-x-0 bottom-0 p-6">
+            <span class="text-xs text-gold">٠٢</span>
+            <h3 class="mt-1 font-display text-2xl font-bold">الرياضة</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/70">هدف 10,000 خطوة يومياً بعداد واضح ومحفّز.</p>
+          </figcaption>
+        </figure>
+        <figure class="img-zoom group relative h-[420px] overflow-hidden rounded-[28px] border border-line reveal">
+          <img src="./img/water.jpg" alt="كوب ماء بارد وعلبة ماء على سطح حجري داكن" class="h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></div>
+          <figcaption class="absolute inset-x-0 bottom-0 p-6">
+            <span class="text-xs text-gold">٠٣</span>
+            <h3 class="mt-1 font-display text-2xl font-bold">الروتين الصحي</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/70">6 علب ماء × 330 مل، تتابعها بلمسة واحدة.</p>
+          </figcaption>
+        </figure>
+        <figure class="img-zoom group relative h-[420px] overflow-hidden rounded-[28px] border border-line reveal lg:mt-10">
+          <img src="./img/routine.jpg" alt="مكتب صباحي مرتب عليه مفكرة وقلم وقهوة عربية وتمر" class="h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></div>
+          <figcaption class="absolute inset-x-0 bottom-0 p-6">
+            <span class="text-xs text-gold">٠٤</span>
+            <h3 class="mt-1 font-display text-2xl font-bold">ترتيب الحياة</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/70">مفكرة يومية وروتين صباحي بدون جوال.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Features Bento -->
+    <section id="features" class="mx-auto max-w-6xl px-5 py-24">
+      <div class="mb-14 max-w-xl reveal">
+        <p class="text-sm font-medium text-gold">المميزات</p>
+        <h2 class="mt-3 font-display text-4xl font-bold leading-snug md:text-5xl">كل ما يحتاجه يومك، بدون زحمة.</h2>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        <!-- Wake routine + streak -->
+        <article class="card relative overflow-hidden rounded-[28px] md:col-span-2 reveal">
+          <div class="grid h-full md:grid-cols-2">
+            <div class="p-8">
+              <span class="grid h-11 w-11 place-items-center rounded-2xl bg-gold/10 text-gold ring-1 ring-gold/25">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+              </span>
+              <h3 class="mt-5 text-xl font-bold">روتين الاستيقاظ بدون جوال</h3>
+              <p class="mt-3 leading-loose text-muted">ابدأ صباحك بخطوات واضحة بعيداً عن الشاشة، وأنجز عاداتك واحدة تلو الأخرى، وحافظ على الستريك اليومي.</p>
+              <div class="mt-6 space-y-2 text-sm" aria-hidden="true">
+                <div class="flex items-center justify-between rounded-xl border border-line bg-ink/60 px-4 py-2.5"><span>صلاة الفجر</span><span class="text-emerald-300">تمّت</span></div>
+                <div class="flex items-center justify-between rounded-xl border border-line bg-ink/60 px-4 py-2.5"><span>أذكار الصباح</span><span class="text-emerald-300">تمّت</span></div>
+                <div class="flex items-center justify-between rounded-xl border border-orange-400/20 bg-orange-500/10 px-4 py-2.5 text-orange-200"><span>ستريك متواصل</span><span>12 يوم</span></div>
+              </div>
+            </div>
+            <div class="img-zoom relative hidden min-h-[320px] overflow-hidden md:block">
+              <img src="./img/routine.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-l from-transparent to-panel"></div>
+            </div>
           </div>
-          <div class="card">
-            <span class="card-icon">🕌</span>
-            <h3>الصلوات وقارئ الأذكار</h3>
-            <p>تتبع الصلوات الخمس والنوافل والورد القرآني، مع قارئ أذكار تفاعلي يحفظ مكان وقوفك وقابل للتعديل.</p>
+        </article>
+
+        <!-- Worship -->
+        <article class="card overflow-hidden rounded-[28px] md:row-span-2 reveal">
+          <div class="img-zoom relative h-48 overflow-hidden">
+            <img src="./img/worship.jpg" alt="" class="h-full w-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-panel to-transparent"></div>
           </div>
-          <div class="card">
-            <span class="card-icon">👟</span>
-            <h3>الصحة والنشاط اليومي</h3>
-            <p>عداد ذكي لهدف 10,000 خطوة، ومتابعة شرب الماء بالعلب (6 علب × 330 مل) مع حساب العلب الإضافية.</p>
+          <div class="p-8 pt-2">
+            <h3 class="text-xl font-bold">الصلوات، النوافل، والأذكار</h3>
+            <p class="mt-3 leading-loose text-muted">تتبّع الصلوات الخمس والنوافل، واقرأ الأذكار بقارئ تفاعلي يحفظ مكان وقوفك.</p>
+            <ul class="mt-6 space-y-2 text-sm" aria-hidden="true">
+              <li class="flex items-center justify-between rounded-xl bg-ink/60 px-4 py-3"><span>الفجر</span><span class="text-xs text-emerald-300">تمّت</span></li>
+              <li class="flex items-center justify-between rounded-xl bg-ink/60 px-4 py-3"><span>الظهر</span><span class="text-xs text-emerald-300">تمّت</span></li>
+              <li class="flex items-center justify-between rounded-xl bg-ink/60 px-4 py-3"><span>العصر</span><span class="text-xs text-emerald-300">تمّت</span></li>
+              <li class="flex items-center justify-between rounded-xl bg-ink/60 px-4 py-3 text-muted"><span>المغرب</span><span class="text-xs">بعد ساعتين</span></li>
+            </ul>
+            <div class="mt-4 rounded-2xl border border-gold/20 bg-gold/5 p-4">
+              <p class="text-xs text-gold">أذكار المساء · متوقف عند 14 من 24</p>
+              <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-line"><div class="h-full w-[58%] rounded-full bg-gold"></div></div>
+            </div>
           </div>
-          <div class="card">
-            <span class="card-icon">🎙️</span>
-            <h3>مفكرة يومية بالصوت</h3>
-            <p>سجل مشاويرك ومهامك الخاصة بالكتابة أو بالإدخال الصوتي السريع مع لوحة إحصائيات شاملة لآخر 14 يوم.</p>
+        </article>
+
+        <!-- Steps -->
+        <article class="card img-zoom relative min-h-[300px] overflow-hidden rounded-[28px] reveal">
+          <img src="./img/fitness.jpg" alt="" class="absolute inset-0 h-full w-full object-cover opacity-60" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/10"></div>
+          <div class="relative flex h-full flex-col justify-end p-8">
+            <p class="font-display text-5xl font-bold text-emerald-300" dir="ltr">10,000</p>
+            <h3 class="mt-2 text-xl font-bold">خطوة كل يوم</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/70">عداد خطوات يحسب تقدمك ويكافئك عند إتمام الهدف.</p>
           </div>
+        </article>
+
+        <!-- Water -->
+        <article class="card img-zoom relative min-h-[300px] overflow-hidden rounded-[28px] reveal">
+          <img src="./img/water.jpg" alt="" class="absolute inset-0 h-full w-full object-cover opacity-60" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/10"></div>
+          <div class="relative flex h-full flex-col justify-end p-8">
+            <div class="flex gap-1.5" aria-hidden="true">
+              <span class="h-8 w-5 rounded-md bg-sky2/80"></span><span class="h-8 w-5 rounded-md bg-sky2/80"></span><span class="h-8 w-5 rounded-md bg-sky2/80"></span><span class="h-8 w-5 rounded-md bg-sky2/80"></span><span class="h-8 w-5 rounded-md bg-white/15"></span><span class="h-8 w-5 rounded-md bg-white/15"></span>
+            </div>
+            <h3 class="mt-4 text-xl font-bold">شرب الماء</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/70">6 علب × 330 مل — حوالي 2 لتر يومياً.</p>
+          </div>
+        </article>
+
+        <!-- Journal + Stats -->
+        <article class="card rounded-[28px] p-8 md:col-span-3 reveal">
+          <div class="grid items-center gap-10 md:grid-cols-[1fr_1.6fr]">
+            <div>
+              <span class="grid h-11 w-11 place-items-center rounded-2xl bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              </span>
+              <h3 class="mt-5 text-xl font-bold">مفكرة صوتية ولوحة إحصائيات</h3>
+              <p class="mt-3 leading-loose text-muted">اكتب أو تكلّم في مفكرتك اليومية، وشوف تقدمك بوضوح في آخر 14 يوم.</p>
+              <div class="mt-6 flex items-center gap-3 rounded-2xl border border-line bg-ink/60 p-3" aria-hidden="true">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-emerald-500 text-ink"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="9" y="3" width="6" height="11" rx="3"/></svg></span>
+                <div id="wave" class="flex h-6 flex-1 items-center gap-[3px]"></div>
+                <span class="text-xs text-muted" dir="ltr">0:12</span>
+              </div>
+            </div>
+            <div>
+              <div class="mb-4 flex items-center justify-between text-sm"><span class="text-muted">نسبة الالتزام · آخر 14 يوم</span><span class="font-bold text-emerald-300">87%</span></div>
+              <div id="chart" class="flex h-40 items-end gap-1.5" aria-hidden="true"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Changelog -->
+    <section id="changelog" class="mx-auto max-w-6xl px-5 py-24">
+      <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+        <div class="reveal">
+          <p class="text-sm font-medium text-gold">مركز التحديثات</p>
+          <h2 class="mt-3 font-display text-4xl font-bold leading-snug md:text-5xl">ما الجديد في مسار</h2>
+          <p class="mt-4 leading-loose text-muted">نطوّر التطبيق باستمرار. هنا تلقى كل إصدار وما يحمله.</p>
         </div>
-      </section>
 
-      <section>
-        <h2 class="section-title">مركز التحديثات</h2>
-        <p class="section-sub">آخر إصدار متاح للتطبيق وأبرز التحسينات المضافة.</p>
-        <div class="changelog-box">
-          <div class="changelog-header">
-            <strong id="changelogVersion">الإصدار 1.0.0</strong>
-            <span style="color: var(--muted); font-size: 13px;" id="changelogDate">2026-11-23</span>
-          </div>
-          <ul class="changelog-list" id="changelogList">
-            <li>الإصدار الأول الرسمي لتطبيق مسار للأندرويد</li>
-            <li>العمل بشكل مستقل وكامل بدون الحاجة للإنترنت</li>
-          </ul>
+        <ol class="relative border-s border-line ps-8 reveal">
+          <li class="relative">
+            <span class="absolute -start-[39px] top-2 grid h-5 w-5 place-items-center rounded-full bg-gold/20 ring-4 ring-ink"><span class="h-2 w-2 rounded-full bg-gold"></span></span>
+            <article class="card rounded-[28px] p-8">
+              <div class="flex flex-wrap items-center gap-3">
+                <span class="rounded-full bg-gradient-to-l from-gold to-[#ecd9a8] px-3 py-1 text-xs font-bold text-ink" dir="ltr">v1.0.0</span>
+                <span class="rounded-full border border-line px-3 py-1 text-xs text-muted">أحدث إصدار</span>
+                <time datetime="2026-11-23" class="text-sm text-muted">23 نوفمبر 2026</time>
+              </div>
+              <h3 class="mt-5 font-display text-2xl font-bold">الإطلاق الأول</h3>
+              <ul class="mt-5 space-y-3 text-[15px] leading-relaxed">
+                <li class="flex gap-3"><span class="mt-0.5 shrink-0 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-300">جديد</span><span>روتين الاستيقاظ بدون جوال مع الستريك اليومي.</span></li>
+                <li class="flex gap-3"><span class="mt-0.5 shrink-0 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-300">جديد</span><span>تتبّع الصلوات الخمس والنوافل.</span></li>
+                <li class="flex gap-3"><span class="mt-0.5 shrink-0 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-300">جديد</span><span>قارئ أذكار تفاعلي يحفظ مكان وقوفك.</span></li>
+                <li class="flex gap-3"><span class="mt-0.5 shrink-0 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-300">جديد</span><span>عداد 10,000 خطوة وعداد الماء (6 علب × 330 مل).</span></li>
+                <li class="flex gap-3"><span class="mt-0.5 shrink-0 rounded-md bg-gold/10 px-2 py-0.5 text-[11px] font-bold text-gold">تحسين</span><span>مفكرة يومية بالإدخال الصوتي ولوحة إحصائيات لآخر 14 يوم.</span></li>
+              </ul>
+            </article>
+          </li>
+          <li class="relative mt-8">
+            <span class="absolute -start-[35px] top-1.5 h-3 w-3 rounded-full bg-line ring-4 ring-ink"></span>
+            <p class="text-sm text-muted">المزيد من التحديثات قريباً…</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="mx-auto max-w-6xl px-5 pb-24">
+      <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+        <div class="reveal">
+          <p class="text-sm font-medium text-gold">الأسئلة الشائعة</p>
+          <h2 class="mt-3 font-display text-4xl font-bold leading-snug md:text-5xl">قبل ما تبدأ</h2>
+          <p class="mt-4 leading-loose text-muted">إجابات سريعة على أكثر الأسئلة تكراراً.</p>
         </div>
-      </section>
-    </main>
+        <div class="space-y-3 reveal">
+          <details class="faq card group rounded-2xl p-6" open>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">هل التطبيق مجاني؟<span class="faq-plus text-gold" aria-hidden="true">+</span></summary>
+            <p class="mt-4 leading-loose text-muted">نعم، مسار مجاني بالكامل وبدون إعلانات مزعجة.</p>
+          </details>
+          <details class="faq card group rounded-2xl p-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">كيف أثبّت ملف APK على جوالي؟<span class="faq-plus text-gold" aria-hidden="true">+</span></summary>
+            <p class="mt-4 leading-loose text-muted">حمّل الملف، ثم افتحه واسمح بالتثبيت من مصادر غير معروفة عند الطلب، وبعدها اضغط تثبيت.</p>
+          </details>
+          <details class="faq card group rounded-2xl p-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">عندي آيفون، هل أقدر أستخدمه؟<span class="faq-plus text-gold" aria-hidden="true">+</span></summary>
+            <p class="mt-4 leading-loose text-muted">أكيد، افتح نسخة الويب من سفاري واختر "إضافة إلى الشاشة الرئيسية" ليعمل كتطبيق.</p>
+          </details>
+          <details class="faq card group rounded-2xl p-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">هل بياناتي محفوظة إذا قفلت التطبيق؟<span class="faq-plus text-gold" aria-hidden="true">+</span></summary>
+            <p class="mt-4 leading-loose text-muted">نعم، تقدمك والستريك ومكانك في الأذكار يتحفظ تلقائياً على جهازك.</p>
+          </details>
+        </div>
+      </div>
+    </section>
 
-    <footer>
-      تطبيق مسار — جميع الحقوق محفوظة © 2026
-    </footer>
-  </div>
+    <!-- CTA -->
+    <section class="mx-auto max-w-6xl px-5 pb-24">
+      <div class="relative isolate overflow-hidden rounded-[36px] border border-gold/15 px-8 py-20 text-center reveal">
+        <img src="./img/hero.jpg" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" />
+        <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/70 to-ink/30"></div>
+        <h2 class="font-display text-4xl font-bold md:text-6xl">ابدأ مسارك من الفجر القادم</h2>
+        <p class="mx-auto mt-5 max-w-md leading-loose text-white/70">خطوة صغيرة كل يوم، تصنع فرقاً كبيراً.</p>
+        <div class="mt-10 flex flex-wrap justify-center gap-3">
+          <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" rel="noopener" class="rounded-2xl bg-gradient-to-b from-emerald-400 to-emerald-600 px-7 py-4 font-bold text-ink shadow-xl shadow-emerald-600/25 transition hover:brightness-110">تحميل للأندرويد (APK)</a>
+          <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" rel="noopener" class="glass rounded-2xl px-7 py-4 font-medium transition hover:border-gold/40">نسخة الويب / الآيفون</a>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  <script>
-    fetch('./version.json?t=' + Date.now())
-      .then(res => res.json())
-      .then(data => {
-        if (data.version) {
-          document.getElementById('versionBadge').textContent = 'الإصدار v' + data.version;
-          document.getElementById('changelogVersion').textContent = 'الإصدار ' + data.version;
-        }
-        if (data.releaseDate) {
-          document.getElementById('changelogDate').textContent = data.releaseDate;
-        }
-        if (data.apkUrl) {
-          document.getElementById('downloadBtn').href = data.apkUrl;
-        }
-        if (Array.isArray(data.notes) && data.notes.length) {
-          document.getElementById('changelogList').innerHTML = data.notes.map(n => `<li>${n}</li>`).join('');
-        }
-      })
-      .catch(() => {});
-  </script>
+  <footer class="border-t border-line">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-5 py-10 text-sm text-muted md:flex-row">
+      <div class="flex items-center gap-3">
+            <img src="./img/icon.jpg" alt="" width="32" height="32" class="h-8 w-8 rounded-lg object-cover ring-1 ring-gold/25" />
+            <span class="font-display text-xl font-bold text-white">مسار</span>
+        <span dir="ltr" class="rounded-full border border-line px-2 py-0.5 text-[11px]">v1.0.0</span>
+        <span class="hidden sm:inline">· رتّب يومك بين العبادة والعافية</span>
+      </div>
+      <nav class="flex gap-6" aria-label="روابط التذييل">
+        <a href="#pillars" class="hover:text-white">الركائز</a>
+        <a href="#features" class="hover:text-white">المميزات</a>
+        <a href="#changelog" class="hover:text-white">التحديثات</a>
+        <a href="#faq" class="hover:text-white">الأسئلة</a>
+        <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" rel="noopener" class="hover:text-white">نسخة الويب</a>
+      </nav>
+      <p>© 2026 مسار</p>
+    </div>
+  </footer>
+
+<script>
+  const fmt = n => n.toLocaleString('en-US');
+  let steps = 7400, water = 3;
+  const prayers = [['الفجر',true],['الظهر',true],['العصر',true],['المغرب',false],['العشاء',false]];
+  const C = 263.9;
+
+  function updateProgress() {
+    const done = prayers.filter(p => p[1]).length + Math.min(steps, 10000) / 10000 + water / 6;
+    const pct = Math.round(done / 7 * 100);
+    document.getElementById('dayPct').textContent = pct + '%';
+    document.getElementById('dayBar').style.width = pct + '%';
+    const badge = document.getElementById('dayBadge');
+    badge.classList.remove('pop'); void badge.offsetWidth; badge.classList.add('pop');
+  }
+
+  function renderSteps() {
+    document.getElementById('stepsVal').textContent = fmt(steps);
+    document.getElementById('stepsRing').style.strokeDashoffset = C - C * Math.min(steps, 10000) / 10000;
+  }
+  document.getElementById('stepsBtn').addEventListener('click', () => {
+    if (steps >= 10000) { steps = 0; renderSteps(); return; }
+    steps = Math.min(10000, steps + 1000); renderSteps(); updateProgress();
+  });
+
+  const cans = document.getElementById('cans');
+  function renderWater() {
+    cans.innerHTML = '';
+    for (let i = 0; i < 6; i++) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'علبة ماء ' + (i + 1) + (i < water ? ' — تم شربها' : ''));
+      b.setAttribute('aria-pressed', i < water);
+      b.className = 'h-7 rounded-md transition ' + (i < water ? 'bg-sky2/80' : 'bg-line hover:bg-sky2/30');
+      b.onclick = () => { water = (i < water) ? i : i + 1; renderWater(); updateProgress(); };
+      cans.appendChild(b);
+    }
+    document.getElementById('waterMl').textContent = fmt(water * 330);
+  }
+
+  const pWrap = document.getElementById('prayers');
+  function renderPrayers() {
+    pWrap.innerHTML = '';
+    prayers.forEach(p => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-pressed', p[1]);
+      b.className = 'flex-1 rounded-lg py-1.5 text-[10px] transition ' + (p[1] ? 'bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-500/30' : 'bg-line/70 text-muted hover:text-white');
+      b.textContent = p[0];
+      b.onclick = () => { p[1] = !p[1]; renderPrayers(); updateProgress(); };
+      pWrap.appendChild(b);
+    });
+    const done = prayers.filter(p => p[1]).length;
+    document.getElementById('prayCount').textContent = done;
+    const f = document.getElementById('flame');
+    if (done === 5) { f.classList.remove('pop'); void f.offsetWidth; f.classList.add('pop'); document.getElementById('streak').textContent = 13; }
+    else document.getElementById('streak').textContent = 12;
+  }
+
+  const chart = document.getElementById('chart');
+  [40,55,35,70,60,80,50,65,90,75,60,85,95,88].forEach((h, i) => {
+    const d = document.createElement('span');
+    d.className = 'flex-1 rounded-t-md ' + (i === 13 ? 'bg-gradient-to-t from-emerald-600 to-gold' : 'bg-emerald-500/25');
+    d.style.height = h + '%';
+    chart.appendChild(d);
+  });
+
+  const wave = document.getElementById('wave');
+  for (let i = 0; i < 28; i++) {
+    const s = document.createElement('span');
+    s.className = 'w-[3px] flex-none rounded-full ' + (i < 12 ? 'bg-emerald-400' : 'bg-white/20');
+    s.style.height = (20 + Math.abs(Math.sin(i * 1.3)) * 80) + '%';
+    wave.appendChild(s);
+  }
+
+  renderSteps(); renderWater(); renderPrayers(); updateProgress();
+
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
 </body>
 </html>
