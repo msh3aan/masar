@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مسار | تطبيق العادات اليومية والعبادات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0d10;
+      --surface: #14161b;
+      --border: #23262f;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #10b981;
+      --accent-hover: #059669;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      font-size: 12px;
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .hero {
+      padding: 72px 0 56px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 48px);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #06281e;
+    }
+    .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: #3f4452; }
+    .meta-info {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    section {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      color: var(--muted);
+      margin-bottom: 28px;
+      font-size: 15px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .card-icon {
+      font-size: 26px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .card p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .changelog-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .changelog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .changelog-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .changelog-list li {
+      color: #d1d5db;
+      font-size: 15px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .changelog-list li::before {
+      content: "•";
+      color: var(--accent);
+      font-weight: bold;
+    }
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">مسار</div>
+      <span class="badge" id="versionBadge">الإصدار v1.0.0</span>
+    </header>
+
+    <main>
+      <div class="hero">
+        <h1>رتّب يومك، التزم بعباداتك، وابنِ عاداتك الصحية</h1>
+        <p>تطبيق عملي وبسيط يجمع الصلوات والأذكار، المشي وشرب الماء، ومهامك اليومية في مكان واحد بنظام نقاط وستريك يحفزك على الاستمرار بدون تعقيد.</p>
+        <div class="actions">
+          <a id="downloadBtn" href="https://github.com/msh3aan/masar/releases/latest/download/masar.apk" class="btn btn-primary">
+            تحميل للأندرويد (APK)
+          </a>
+          <a href="https://splendorous-elf-7b12a0.netlify.app/" target="_blank" class="btn btn-secondary">
+            فتح نسخة الويب / الآيفون
+          </a>
+        </div>
+        <div class="meta-info" id="releaseMeta">يعمل بدون إنترنت • تحديثات مباشرة من الموقع</div>
+      </div>
+
+      <section>
+        <h2 class="section-title">ليش تطبيق مسار؟</h2>
+        <p class="section-sub">صُمم ليكون رفيقك اليومي بعيداً عن التشتت، مع تركيز على البداية الصحيحة لليوم.</p>
+        <div class="grid">
+          <div class="card">
+            <span class="card-icon">🌅</span>
+            <h3>بداية يوم بدون تشتت</h3>
+            <p>روتين استيقاظ واضح (بدون جوال، غسل الوجه، الوضوء) مع نظام نقاط XP وستريك يومي يحمسك تحافظ على سلسلتك.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🕌</span>
+            <h3>الصلوات وقارئ الأذكار</h3>
+            <p>تتبع الصلوات الخمس والنوافل والورد القرآني، مع قارئ أذكار تفاعلي يحفظ مكان وقوفك وقابل للتعديل.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">👟</span>
+            <h3>الصحة والنشاط اليومي</h3>
+            <p>عداد ذكي لهدف 10,000 خطوة، ومتابعة شرب الماء بالعلب (6 علب × 330 مل) مع حساب العلب الإضافية.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🎙️</span>
+            <h3>مفكرة يومية بالصوت</h3>
+            <p>سجل مشاويرك ومهامك الخاصة بالكتابة أو بالإدخال الصوتي السريع مع لوحة إحصائيات شاملة لآخر 14 يوم.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">مركز التحديثات</h2>
+        <p class="section-sub">آخر إصدار متاح للتطبيق وأبرز التحسينات المضافة.</p>
+        <div class="changelog-box">
+          <div class="changelog-header">
+            <strong id="changelogVersion">الإصدار 1.0.0</strong>
+            <span style="color: var(--muted); font-size: 13px;" id="changelogDate">2026-11-23</span>
+          </div>
+          <ul class="changelog-list" id="changelogList">
+            <li>الإصدار الأول الرسمي لتطبيق مسار للأندرويد</li>
+            <li>العمل بشكل مستقل وكامل بدون الحاجة للإنترنت</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      تطبيق مسار — جميع الحقوق محفوظة © 2026
+    </footer>
+  </div>
+
+  <script>
+    fetch('./version.json?t=' + Date.now())
+      .then(res => res.json())
+      .then(data => {
+        if (data.version) {
+          document.getElementById('versionBadge').textContent = 'الإصدار v' + data.version;
+          document.getElementById('changelogVersion').textContent = 'الإصدار ' + data.version;
+        }
+        if (data.releaseDate) {
+          document.getElementById('changelogDate').textContent = data.releaseDate;
+        }
+        if (data.apkUrl) {
+          document.getElementById('downloadBtn').href = data.apkUrl;
+        }
+        if (Array.isArray(data.notes) && data.notes.length) {
+          document.getElementById('changelogList').innerHTML = data.notes.map(n => `<li>${n}</li>`).join('');
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>
