@@ -1,0 +1,48 @@
+name: Build Masar APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Initialize Capacitor Project
+        run: |
+          npm init -y
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          npx cap init "مسار" "com.msh3aan.masar" --web-dir=app
+          npx cap add android
+
+      - name: Configure Permissions & Version
+        run: |
+          sed -i 's/<\/manifest>/<uses-permission android:name="android.permission.RECORD_AUDIO" \/>\n<\/manifest>/' android/app/src/main/AndroidManifest.xml
+          sed -i 's/versionName "1.0"/versionName "1.0.0"/' android/app/build.gradle
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+          cp app/build/outputs/apk/debug/app-debug.apk ../masar.apk
+
+      - name: Upload Masar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: masar-apk
+          path: masar.apk
