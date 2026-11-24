@@ -1,12 +1,18 @@
 name: Build Masar APK
 
 on:
+  push:
+    branches: [ main, master ]
+  release:
+    types: [ published, created, edited ]
   workflow_dispatch:
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+permissions:
+  contents: write
 
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,27 +28,86 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Initialize Capacitor Project
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Prepare web app source in www/
+        run: |
+          mkdir -p www
+          if [ -f "Masar_Enhanced.html" ]; then
+            cp "Masar_Enhanced.html" "www/index.html"
+          elif [ -f "Masar_Enhanced (1).html" ]; then
+            cp "Masar_Enhanced (1).html" "www/index.html"
+          elif [ -f "index.html" ]; then
+            cp "index.html" "www/index.html"
+          else
+            echo "No HTML file found in repository root"
+            exit 1
+          fi
+
+      - name: Initialize Capacitor Android project
         run: |
           npm init -y
-          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
-          npx cap init "مسار" "com.msh3aan.masar" --web-dir=app
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init "مسار" "com.msh3aan.masar" --web-dir www
           npx cap add android
+          npx cap copy android
 
-      - name: Configure Permissions & Version
+      - name: Configure app name and release signing
         run: |
-          sed -i 's/<\/manifest>/<uses-permission android:name="android.permission.RECORD_AUDIO" \/>\n<\/manifest>/' android/app/src/main/AndroidManifest.xml
-          sed -i 's/versionName "1.0"/versionName "1.0.0"/' android/app/build.gradle
+          sed -i 's/<string name="app_name">.*<\/string>/<string name="app_name">مسار<\/string>/g' android/app/src/main/res/values/strings.xml
+          cat << 'EOF' > android/keystore.properties
+          storeFile=masar-release.keystore
+          storePassword=masar_release_pass_2026
+          keyAlias=masar_key
+          keyPassword=masar_release_pass_2026
+          EOF
+          keytool -genkeypair -v \
+            -keystore android/masar-release.keystore \
+            -alias masar_key \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass masar_release_pass_2026 \
+            -keypass masar_release_pass_2026 \
+            -dname "CN=Masar, OU=App, O=Msh3aan, L=Riyadh, S=Riyadh, C=SA"
+          node -e '
+          const fs = require("fs");
+          const gradlePath = "android/app/build.gradle";
+          let gradle = fs.readFileSync(gradlePath, "utf8");
+          if (!gradle.includes("signingConfigs")) {
+            gradle = gradle.replace(
+              "buildTypes {",
+              `signingConfigs {
+                release {
+                  storeFile file("../masar-release.keystore")
+                  storePassword "masar_release_pass_2026"
+                  keyAlias "masar_key"
+                  keyPassword "masar_release_pass_2026"
+                }
+              }
+              buildTypes {`
+            );
+          }
+          gradle = gradle.replace(
+            /release\s*{/,
+            `release {
+              signingConfig signingConfigs.release`
+          );
+          fs.writeFileSync(gradlePath, gradle, "utf8");
+          '
 
-      - name: Build APK
+      - name: Build signed APK with Gradle
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
-          cp app/build/outputs/apk/debug/app-debug.apk ../masar.apk
+          ./gradlew assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk ../masar.apk
 
-      - name: Upload Masar APK
-        uses: actions/upload-artifact@v4
+      - name: Upload APK to current or latest Release
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         with:
-          name: masar-apk
-          path: masar.apk
+          files: masar.apk
+          tag_name: ${{ github.event_name == 'release' && github.event.release.tag_name || 'v2.0' }}
+          make_latest: true
