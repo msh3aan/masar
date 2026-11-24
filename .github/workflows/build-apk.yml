@@ -75,12 +75,7 @@ jobs:
       - name: Configure app name and release signing
         run: |
           sed -i 's/<string name="app_name">.*<\/string>/<string name="app_name">مسار<\/string>/g' android/app/src/main/res/values/strings.xml
-          cat << 'EOF' > android/keystore.properties
-          storeFile=masar-release.keystore
-          storePassword=masar_release_pass_2026
-          keyAlias=masar_key
-          keyPassword=masar_release_pass_2026
-          EOF
+          
           keytool -genkeypair -v \
             -keystore android/masar-release.keystore \
             -alias masar_key \
@@ -90,37 +85,32 @@ jobs:
             -storepass masar_release_pass_2026 \
             -keypass masar_release_pass_2026 \
             -dname "CN=Masar, OU=App, O=Msh3aan, L=Riyadh, S=Riyadh, C=SA"
-          node -e '
-          const fs = require("fs");
-          const gradlePath = "android/app/build.gradle";
-          let gradle = fs.readFileSync(gradlePath, "utf8");
-          if (!gradle.includes("signingConfigs")) {
-            gradle = gradle.replace(
-              "buildTypes {",
-              `signingConfigs {
-                release {
-                  storeFile file("../masar-release.keystore")
-                  storePassword "masar_release_pass_2026"
-                  keyAlias "masar_key"
-                  keyPassword "masar_release_pass_2026"
-                }
+
+          cat << 'EOF' > android/app/signing.gradle
+          android {
+              signingConfigs {
+                  release {
+                      storeFile file("../masar-release.keystore")
+                      storePassword "masar_release_pass_2026"
+                      keyAlias "masar_key"
+                      keyPassword "masar_release_pass_2026"
+                  }
               }
-              buildTypes {`
-            );
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              }
           }
-          gradle = gradle.replace(
-            /release\s*{/,
-            `release {
-              signingConfig signingConfigs.release`
-          );
-          fs.writeFileSync(gradlePath, gradle, "utf8");
-          '
+          EOF
+          
+          echo "apply from: 'signing.gradle'" >> android/app/build.gradle
 
       - name: Build signed APK with Gradle
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --no-daemon
           cp app/build/outputs/apk/release/app-release.apk ../masar.apk
 
       - name: Upload APK to current or latest Release
