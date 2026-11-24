@@ -28,8 +28,27 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Configure Android SDK environment
+        run: |
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          mkdir -p "$SDK_ROOT"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "$SDK_ROOT/platform-tools:$SDK_ROOT/cmdline-tools/latest/bin:$SDK_ROOT/cmdline-tools/tools/bin" >> "$GITHUB_PATH"
+          CMDLINE_BIN=""
+          if command -v sdkmanager >/dev/null 2>&1; then
+            CMDLINE_BIN="sdkmanager"
+          elif [ -x "$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" ]; then
+            CMDLINE_BIN="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          elif [ -x "$SDK_ROOT/cmdline-tools/tools/bin/sdkmanager" ]; then
+            CMDLINE_BIN="$SDK_ROOT/cmdline-tools/tools/bin/sdkmanager"
+          fi
+          if [ -n "$CMDLINE_BIN" ]; then
+            yes | "$CMDLINE_BIN" --licenses >/dev/null 2>&1 || true
+            "$CMDLINE_BIN" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0" || true
+          else
+            echo "Warning: sdkmanager not found, relying on preinstalled SDK in $SDK_ROOT"
+          fi
 
       - name: Prepare web app source in www/
         run: |
