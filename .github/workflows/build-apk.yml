@@ -53,14 +53,16 @@ jobs:
       - name: Prepare web app source in www/
         run: |
           mkdir -p www
-          if [ -f "Masar_Enhanced.html" ]; then
+          if [ -f "app/index.html" ]; then
+            cp "app/index.html" "www/index.html"
+          elif [ -f "Masar_Enhanced (2).html" ]; then
+            cp "Masar_Enhanced (2).html" "www/index.html"
+          elif [ -f "Masar_Enhanced.html" ]; then
             cp "Masar_Enhanced.html" "www/index.html"
-          elif [ -f "Masar_Enhanced (1).html" ]; then
-            cp "Masar_Enhanced (1).html" "www/index.html"
           elif [ -f "index.html" ]; then
             cp "index.html" "www/index.html"
           else
-            echo "No HTML file found in repository root"
+            echo "No HTML file found in app/ or repository root"
             exit 1
           fi
 
@@ -72,10 +74,17 @@ jobs:
           npx cap add android
           npx cap copy android
 
-      - name: Configure app name and release signing
+      - name: Configure app name, Kotlin BOM and release signing
         run: |
           sed -i 's/<string name="app_name">.*<\/string>/<string name="app_name">مسار<\/string>/g' android/app/src/main/res/values/strings.xml
-          
+
+          cat << 'EOF' >> android/app/build.gradle
+
+          dependencies {
+              implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.22"))
+          }
+          EOF
+
           keytool -genkeypair -v \
             -keystore android/masar-release.keystore \
             -alias masar_key \
@@ -103,7 +112,7 @@ jobs:
               }
           }
           EOF
-          
+
           echo "apply from: 'signing.gradle'" >> android/app/build.gradle
 
       - name: Build signed APK with Gradle
@@ -118,5 +127,5 @@ jobs:
         if: github.event_name == 'release' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         with:
           files: masar.apk
-          tag_name: ${{ github.event_name == 'release' && github.event.release.tag_name || 'v2.0' }}
+          tag_name: ${{ github.event_name == 'release' && github.event.release.tag_name || 'v2.0.0' }}
           make_latest: true
