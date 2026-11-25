@@ -74,35 +74,39 @@ jobs:
           npx cap add android
           npx cap copy android
 
-      - name: Configure app icon, name, Kotlin BOM and release signing
+      - name: Configure app icon, version, name, Kotlin BOM and release signing
         run: |
           if [ -f "img/icon.jpg" ]; then
-            for mipmap_dir in android/app/src/main/res/mipmap-*; do
-              if [ -d "$mipmap_dir" ]; then
-                cp "img/icon.jpg" "$mipmap_dir/ic_launcher.jpg"
-                cp "img/icon.jpg" "$mipmap_dir/ic_launcher_round.jpg"
-                cp "img/icon.jpg" "$mipmap_dir/ic_launcher_foreground.jpg"
-              fi
-            done
+            python3 -m pip install --quiet Pillow || true
+            rm -rf android/app/src/main/res/mipmap-anydpi-v26
             python3 -c '
-import glob, xml.etree.ElementTree as ET
-for path in glob.glob("android/app/src/main/res/mipmap-anydpi-v26/*.xml"):
-    try:
-        tree = ET.parse(path)
-        root = tree.getroot()
-        for tag in ("background", "foreground", "monochrome"):
-            el = root.find(tag)
-            if el is not None:
-                for k, v in list(el.attrib.items()):
-                    if k.endswith("drawable") and "@mipmap/" in v:
-                        el.set(k, "@mipmap/ic_launcher")
-        tree.write(path, encoding="utf-8", xml_declaration=True)
-    except Exception:
-        pass
-' || true
+import glob, os
+from PIL import Image
+
+src = "img/icon.jpg"
+sizes = {
+    "mipmap-mdpi": 48,
+    "mipmap-hdpi": 72,
+    "mipmap-xhdpi": 96,
+    "mipmap-xxhdpi": 144,
+    "mipmap-xxxhdpi": 192,
+}
+with Image.open(src) as im:
+    im = im.convert("RGBA")
+    for folder, px in sizes.items():
+        d = os.path.join("android/app/src/main/res", folder)
+        os.makedirs(d, exist_ok=True)
+        for old_file in glob.glob(os.path.join(d, "ic_launcher*")):
+            os.remove(old_file)
+        resized = im.resize((px, px), Image.Resampling.LANCZOS)
+        for name in ("ic_launcher.png", "ic_launcher_round.png", "ic_launcher_foreground.png"):
+            resized.save(os.path.join(d, name), format="PNG")
+'
           fi
 
           sed -i 's/<string name="app_name">.*<\/string>/<string name="app_name">مسار<\/string>/g' android/app/src/main/res/values/strings.xml
+          sed -i 's/versionCode 1/versionCode 2/g' android/app/build.gradle
+          sed -i 's/versionName "1.0"/versionName "2.0.0"/g' android/app/build.gradle
 
           cat << 'EOF' >> android/app/build.gradle
 
